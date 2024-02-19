@@ -1,0 +1,131 @@
+
+var usu_id = $('#usu_idx').val();
+
+function init(){
+    $("#encargado_form").on("submit",function(e){
+        guardaryeditar(e);
+    });
+}
+
+function guardaryeditar(e){
+    e.preventDefault();
+    var formData = new FormData($("#encargado_form")[0]);
+    $.ajax({
+        url: "../../controller/encargado.php?op=guardaryeditar",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(data){
+
+            $('#encargado_data').DataTable().ajax.reload();
+            $('#modalmantenimiento').modal('hide');
+
+            Swal.fire({
+                title: 'Correcto!',
+                text: 'Se Registro Correctamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            })
+        }
+    });
+}
+
+$(document).ready(function(){
+    $('#enca_sex').select2({
+        dropdownParent: $('#modalmantenimiento')
+    });
+
+    $('#encargado_data').DataTable({
+        "aProcessing": true,
+        "aServerSide": true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+        ],
+        "ajax":{
+            url:"../../controller/encargado.php?op=listar",
+            type:"post"
+        },
+        "bDestroy": true,
+        "responsive": true,
+        "bInfo":true,
+        "iDisplayLength": 10,
+        "order": [[ 0, "desc" ]],
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+    });
+
+});
+
+function editar(enca_id){
+    $.post("../../controller/encargado.php?op=mostrar",{enca_id : enca_id}, function (data) {
+        data = JSON.parse(data);
+        $('#enca_id').val(data.enca_id);
+        $('#enca_nom').val(data.enca_nom);
+        $('#enca_apep').val(data.enca_apep);
+        $('#enca_apem').val(data.enca_apem);
+        $('#enca_correo').val(data.enca_correo);
+        $('#enca_telf').val(data.enca_telf);
+    });
+    $('#lbltitulo').html('Editar Registro');
+    $('#modalmantenimiento').modal('show');
+}
+
+function eliminar(enca_id){
+    swal.fire({
+        title: "Eliminar!",
+        text: "Desea Eliminar el Registro?",
+        icon: "error",
+        confirmButtonText: "Si",
+        showCancelButton: true,
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.value) {
+            $.post("../../controller/encargado.php?op=eliminar",{enca_id : enca_id}, function (data) {
+                $('#encargado_data').DataTable().ajax.reload();
+
+                Swal.fire({
+                    title: 'Correcto!',
+                    text: 'Se Elimino Correctamente',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                })
+            });
+        }
+    });
+}
+
+function nuevo(){
+    $('#enca_id').val('');
+    $('#enca_sex').val('').trigger('change');
+    $('#lbltitulo').html('Nuevo Registro');
+    $('#encargado_form')[0].reset();
+    $('#modalmantenimiento').modal('show');
+}
+
+init();
