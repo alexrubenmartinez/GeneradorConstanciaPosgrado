@@ -1,6 +1,6 @@
-# Generador de Constancias - Escuela de Posgrado UNASCH
+# Generador de Constancias - Escuela de Posgrado UNSCH
 
-Este proyecto es un sistema para generar constancias, desarrollado para la Escuela de Posgrado de la Universidad Nacional San Cristóbal de Huamanga (UNASCH).
+Este proyecto es un sistema para generar constancias, desarrollado para la Escuela de Posgrado de la Universidad Nacional San Cristóbal de Huamanga (UNSCH).
 
 ## Descripción
 
